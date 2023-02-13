@@ -24,3 +24,5 @@ yarn-error.log*
 
 /file
 /img
+routes/admin.js
+util/database.js
