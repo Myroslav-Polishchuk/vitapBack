@@ -7,15 +7,21 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongodb": "^3.6.0",
-    "mongoose": "^5.10.2",
+    "multer": "^1.4.2",
+    "mysql2": "^2.2.5",
     "nodemon": "^2.0.4",
+    "sequelize": "^6.5.0",
+    "sequelize-cli": "^6.2.0",
+    "uuid": "^8.3.2",
     "youtube-info": "^1.3.2"
   },
   "devDependencies": {},
   "scripts": {
     "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migration": "sequelize db:migrate --env production",
+    "migration-status": "sequelize db:migrate:status --env production"
+
   },
   "author": "",
   "license": "ISC"

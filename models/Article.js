@@ -1,20 +1,25 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const articleSchema = new Schema({
-    main_title: {type: String, required: true},
-    main_fullText: {type: String, required: true},
-    meta_name: {type: String, required: true},
-    meta_code: {type: String, required: true},
-    meta_workplace: {type: String, required: true},
-    resume_keywords: {type: String, required: true},
-    resume_paragraphs: {type: String, required: true},
-    referencesID: {type: [{type: Schema.Types.ObjectId, ref: 'Reference'}], required: true},
-    categoryID: {type: Schema.Types.ObjectId, ref: 'Category'},
-    meta_authors: {type: [{type: Schema.Types.ObjectId, ref: 'Author'}], required: true},
-    journalID: {type: Schema.Types.ObjectId, ref: 'Journal'},
-    isOnline: {type: Boolean, required: true},
-    date: {type: Date, required: true}
+const Article = sequelize.define('Article', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
+    main_title: {type: Sequelize.STRING},
+    main_fullText: {type: Sequelize.TEXT('long')},
+    meta_code: {type: Sequelize.STRING},
+    journal_number: {type: Sequelize.STRING},
+    journal_year: {type: Sequelize.STRING},
+    journal_pages: {type: Sequelize.STRING},
+    resume_keywords: {type: Sequelize.TEXT},
+    resume_paragraphs: {type: Sequelize.TEXT('long')},
+    isOnline: {type: Sequelize.BOOLEAN},
+    showPDF: {type: Sequelize.BOOLEAN},
+    date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW},
+    references: {type: Sequelize.TEXT('long')}
 });
 
-module.exports = mongoose.model('Article', articleSchema);
+module.exports = Article;

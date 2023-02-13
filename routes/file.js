@@ -1,9 +1,7 @@
 const express = require('express');
 const route = express.Router();
-const mainModel = require('../models/Category');
-const sequelize = require('sequelize');
+const mainModel = require('../models/File');
 const { Op } = require("sequelize");
-const utils = require('../models/utils');
 
 // ==========================
 route.post('/table/length', function (req, res, next) {
@@ -69,6 +67,16 @@ route.get('/form/:ID', function (req, res, next) {
 });
 
 route.post('/form', function (req, res, next) {
+    if (!req.files || !req.files.file || !req.files.file.length) {
+        res.json({
+            resultBack: "Файл не був збережений",
+            data: []
+        });
+    }
+
+    const file = req.files.file[0];
+    req.body.link = `${process.env.host}/${file.destination}/${file.filename}`;
+
     mainModel.create(req.body)
         .then(data => {
             res.json({
@@ -82,22 +90,22 @@ route.post('/form', function (req, res, next) {
 });
 
 route.put('/form', function (req, res, next) {
-    mainModel.findByPk(req.body.id)
-        .then(data => {
-            data.update(req.body)
-                .then(data => {
-                    res.json({
-                        resultBack: `ID: ${req.body.id}) - Оновлено у бази даних`,
-                        data: data
-                    })
-                })
-                .catch(err => {
-                    console.log(`Error for while making update for advertising=>put=>/form. Error log: ${err}`);
-                });
-        })
-        .catch(err => {
-            console.log(`Error for while making findByPk for advertising=>put=>/form. Error log: ${err}`);
+    mainModel.findByPk(
+        req.body.id
+    ).then(data => {
+        data.update(
+            req.body
+        ).then(data => {
+            res.json({
+                resultBack: `ID: ${req.body.id}) - Оновлено у бази даних`,
+                data: data
+            });
+        }).catch(err => {
+            console.log(`Error for while making update for advertising=>put=>/form. Error log: ${err}`);
         });
+    }).catch(err => {
+        console.log(`Error for while making findByPk for advertising=>put=>/form. Error log: ${err}`);
+    });
 });
 
 route.delete('/form', function (req, res, next) {
@@ -108,17 +116,16 @@ route.delete('/form', function (req, res, next) {
 // =======================================
 
 route.get('/', function(req, res, next) {
-	mainModel
-		.findAll({
-            order: [
-                ['sortPositionHeader', 'ASC']
-            ]
+    mainModel
+        .findAll({})
+        .then(data => {
+            res.json(data);
         })
-		.then(data => {
-			res.json(data);
-			next();
-		})
-		.catch(err => console.log(err))
-})
+        .catch(err => {
+            console.log(err);
+        });
+
+    return;
+});
 
 module.exports = route;

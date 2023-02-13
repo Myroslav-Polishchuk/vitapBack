@@ -1,16 +1,23 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const VideoSchema = new Schema({
-    title: {type: String, required: true},
-    src: {type: String, required: true},
-    embedURL: {type: String, required: true},
-    categoryID: {type: Schema.Types.ObjectId, ref: 'Category', required: true},
-    previewImgSrc: {type: String, required: true},
-    previewImgAlt: {type: String, required: true},
-    previewText: {type: String, required: true},
-    isOnline: {type: Boolean, required: true},
-    date: {type: Date, required: true}
-})
+const Video = sequelize.define('Video', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
 
-module.exports = mongoose.model('Video', VideoSchema);
+    title: {type: Sequelize.STRING},
+    src: {type: Sequelize.STRING},
+    embedURL: {type: Sequelize.TEXT},
+    previewImgSrc: {type: Sequelize.STRING},
+    previewImgAlt: {type: Sequelize.STRING},
+    previewText: {type: Sequelize.STRING},
+    isOnline: {type: Sequelize.BOOLEAN},
+    date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW},
+    mainText: {type: Sequelize.TEXT('long')}
+});
+
+module.exports = Video;

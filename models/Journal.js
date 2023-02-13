@@ -1,9 +1,18 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const journalSchema = new Schema({
-    url: {type: String, required: true},
-    name: {type: String, required: true},
-})
+const Journal = sequelize.define('Journal', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
+    url: {type: Sequelize.STRING},
+    name: {type: Sequelize.STRING},
+    isOnline: {type: Sequelize.BOOLEAN, default: false}
+});
 
-module.exports = mongoose.model('Journal', journalSchema);
+Journal.sync();
+
+module.exports = Journal;

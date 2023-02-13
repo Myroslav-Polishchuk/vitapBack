@@ -1,11 +1,17 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const eventSchema = new Schema({
-    url: {type: String, required: true},
-    imgID: {type: Schema.Types.ObjectId, ref: 'Foto'},
-    isOnline: {type: Boolean, required: true},
-    date: {type: Date, required: true}
-});
+const Event = sequelize.define('Event', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
+    name: {type: Sequelize.STRING},
+    url: {type: Sequelize.STRING},
+    isOnline: {type: Sequelize.BOOLEAN},
+    date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW}
+})
 
-module.exports = mongoose.model('Event', eventSchema);
+module.exports = Event;

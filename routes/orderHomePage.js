@@ -1,9 +1,20 @@
 const express = require('express');
-const route = express.Router();
-const mainModel = require('../models/Category');
+const mainModel = require('../models/OrderHomePage');
 const sequelize = require('sequelize');
 const { Op } = require("sequelize");
-const utils = require('../models/utils');
+
+const route = express.Router();
+
+route.get('/', function(req, res, next) {
+    mainModel.findAll({
+        where: {
+            isOnline: true
+        },
+        order: [['orderNumber', 'ASC']]
+    }).then(ordersEl => {
+        res.json(ordersEl);
+    });
+});
 
 // ==========================
 route.post('/table/length', function (req, res, next) {
@@ -48,24 +59,14 @@ route.post('/table', function (req, res, next) {
     })
 });
 
-route.get('/form', function (req, res, next) {
-    mainModel.findAll()
-        .then(data => {
-            res.json(data || []);
-        })
-        .catch(err => {
-            console.log(`Error for while making findAll for advertising=>get=>/form. Error log: ${err}`);
-        })
-});
-
 route.get('/form/:ID', function (req, res, next) {
-    mainModel.findByPk(req.params.ID)
-        .then(data => {
-            res.json(data || []);
-        })
-        .catch(err => {
-            console.log(`Error for while making findByPK for advertising=>get=>/form/:ID. Error log: ${err}`);
-        });
+    mainModel.findByPk(req.params.ID).then(data => {
+        res.json(data);
+    }).catch(err => {
+        console.log(err);
+    }).catch(err => {
+        console.log(`Error for while making findByPK for advertising=>get=>/form/:ID. Error log: ${err}`);
+    });
 });
 
 route.post('/form', function (req, res, next) {
@@ -101,24 +102,18 @@ route.put('/form', function (req, res, next) {
 });
 
 route.delete('/form', function (req, res, next) {
-    res.json({
-        resultBack: `Видалення не підтримується - функціоналу немає`,
-    })
+    mainModel.destroy({
+        where: {
+            id: req.body.id
+        }
+    }).then(data => {
+        res.json({
+            resultBack: `ID: ${req.body.id}) - Видалені дані`,
+        })
+    }).catch(err => {
+        console.log(`Error for while making delete for advertising=>put=>/form. Error log: ${err}`);
+    });
 });
 // =======================================
-
-route.get('/', function(req, res, next) {
-	mainModel
-		.findAll({
-            order: [
-                ['sortPositionHeader', 'ASC']
-            ]
-        })
-		.then(data => {
-			res.json(data);
-			next();
-		})
-		.catch(err => console.log(err))
-})
 
 module.exports = route;

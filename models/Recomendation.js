@@ -1,12 +1,16 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const recomendationSchema = new Schema({
-    text: {type: String, required: true},
-    categoryID: {type: Schema.Types.ObjectId, ref: 'Category', required: true},
-    fileID: {type: Schema.Types.ObjectId, ref: 'File', required: true},
-    isOnline: {type: Boolean, required: true},
-    date: {type: Date, required: true}
+const Recomendation = sequelize.define('Recomendation', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
+    text: {type: Sequelize.STRING},
+    isOnline: {type: Sequelize.BOOLEAN},
+    date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW}
 });
 
-module.exports = mongoose.model('Recomendation', recomendationSchema);
+module.exports = Recomendation;

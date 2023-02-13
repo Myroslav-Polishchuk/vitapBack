@@ -1,26 +1,40 @@
-// const mongodb = require('mongodb');
-// const MongoClient = mongodb.MongoClient;
+const Sequelize = require('sequelize');
 
-// let _db;
+const sequelize = new Sequelize('vitapol', 'root', 'Baguvix333', {
+    dialect: 'mysql',
+    host: 'localhost',
+    logging: false,
+    define: {
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+    }
+});
 
-// const mongoConnect = (callback) => {
-//     MongoClient.connect('mongodb+srv://Myron:1tSbcA6nBDv1zNmM@cluster0.yqkcs.mongodb.net/<dbname>?retryWrites=true&w=majority')
-//     .then(client => {
-//         console.log("Connected!!!");
-//         _db = client.db();
-//         callback(client);
-//     })
-//     .catch(err => {
-//         console.log(err);
-//     });
-// };
-
-// const getDb = () => {
-//     if (_db) {
-//         return _db
+// const sequelize = new Sequelize('zpindfap_vitapol_2', 'zpindfap_myron', 'CUFNQxYujbMNxhiqACv2', {
+//     dialect: 'mysql',
+//     host: 'localhost',
+//     logging: false,
+//     define: {
+//         charset: 'utf8',
+//         collate: 'utf8_general_ci'
 //     }
-//     throw 'No database connection'
-// }
+// });
 
-// exports.mongoConnect = mongoConnect;
-// exports.getDb = getDb;
+module.exports = sequelize;
+
+//     host: 'localhost',
+//     user: 'zpindfap_myron',
+//     database: 'zpindfap_vitapol',
+//     password: 'CUFNQxYujbMNxhiqACv2'
+
+
+// const mysql = require('mysql2');
+
+// const pool = mysql.createPool({
+//     host: 'localhost',
+//     user: 'root',
+//     database: 'vitapol',
+//     password: 'Baguvix333'
+// });
+
+// module.exports = pool.promise();

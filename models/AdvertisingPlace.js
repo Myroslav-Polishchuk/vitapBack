@@ -1,15 +1,15 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const Advertising = sequelize.define('Advertising', {
+const Author = sequelize.define('AdvertisingPlace', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
-    link: {type: Sequelize.STRING},
-    isOnline: {type: Sequelize.BOOLEAN}
+    type: {type: Sequelize.STRING},
+    jsonConfig: {type: Sequelize.STRING}
 });
 
-module.exports = Advertising;
+module.exports = Author;

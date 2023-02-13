@@ -1,9 +1,24 @@
 const express = require('express');
 const route = express.Router();
-const mainModel = require('../models/Category');
+const mainModel = require('../models/Advertising');
+const FotoModel = require('../models/Foto');
 const sequelize = require('sequelize');
 const { Op } = require("sequelize");
-const utils = require('../models/utils');
+
+route.get('/sub', function(req, res, next) {
+    mainModel
+        .findAll({
+            limit: 1,
+        })
+        .then(data => {
+            res.json(data[0].id);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    return;
+});
 
 // ==========================
 route.post('/table/length', function (req, res, next) {
@@ -34,9 +49,7 @@ route.post('/table', function (req, res, next) {
     };
 
     if (req.body.searchName && req.body.searchValue) {
-        options.where[req.body.searchName] = {
-            [Op.like]: `%${req.body.searchValue}%`
-        };
+        options.where[req.body.searchName] = req.body.searchValue;
     }
 
     mainModel.findAll(options).then(data => {
@@ -52,8 +65,7 @@ route.get('/form', function (req, res, next) {
     mainModel.findAll()
         .then(data => {
             res.json(data || []);
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(`Error for while making findAll for advertising=>get=>/form. Error log: ${err}`);
         })
 });
@@ -62,8 +74,7 @@ route.get('/form/:ID', function (req, res, next) {
     mainModel.findByPk(req.params.ID)
         .then(data => {
             res.json(data || []);
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(`Error for while making findByPK for advertising=>get=>/form/:ID. Error log: ${err}`);
         });
 });
@@ -107,18 +118,34 @@ route.delete('/form', function (req, res, next) {
 });
 // =======================================
 
-route.get('/', function(req, res, next) {
-	mainModel
-		.findAll({
-            order: [
-                ['sortPositionHeader', 'ASC']
-            ]
-        })
-		.then(data => {
-			res.json(data);
-			next();
-		})
-		.catch(err => console.log(err))
-})
+
+route.get('/:ID', function(req, res, next) {
+    const advertisingID = req.params.ID;
+
+    mainModel.findAll({
+        where: {
+            id: advertisingID,
+            isOnline: true
+        },
+        include: [{
+            model: FotoModel,
+            attributes: ['id', 'imgSrc', 'imgAlt']
+        }]
+    }).then(data => {
+        data = data ? data : [];
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+            if (item.Foto.imgSrc.indexOf(':') === -1) {
+                item.Foto.imgSrc = process.env.host + item.Foto.imgSrc;
+            }
+        }
+        const result = data.length ? data[0] : {};
+        res.json(result);
+    }).catch(err => {
+        console.log(err);
+    });
+
+    return;
+});
 
 module.exports = route;

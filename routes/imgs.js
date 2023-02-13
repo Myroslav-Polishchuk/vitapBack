@@ -1,9 +1,8 @@
 const express = require('express');
 const route = express.Router();
-const mainModel = require('../models/Category');
+const mainModel = require('../models/Foto');
 const sequelize = require('sequelize');
 const { Op } = require("sequelize");
-const utils = require('../models/utils');
 
 // ==========================
 route.post('/table/length', function (req, res, next) {
@@ -69,6 +68,9 @@ route.get('/form/:ID', function (req, res, next) {
 });
 
 route.post('/form', function (req, res, next) {
+    const file = req.files.imgFile[0];
+    req.body.imgSrc = `${process.env.host}/${file.destination}/${file.filename}`;
+
     mainModel.create(req.body)
         .then(data => {
             res.json({
@@ -108,17 +110,16 @@ route.delete('/form', function (req, res, next) {
 // =======================================
 
 route.get('/', function(req, res, next) {
-	mainModel
-		.findAll({
-            order: [
-                ['sortPositionHeader', 'ASC']
-            ]
+    mainModel
+        .findAll({})
+        .then(data => {
+            res.json(data);
         })
-		.then(data => {
-			res.json(data);
-			next();
-		})
-		.catch(err => console.log(err))
-})
+        .catch(err => {
+            console.log(err);
+        });
+
+    return;
+});
 
 module.exports = route;

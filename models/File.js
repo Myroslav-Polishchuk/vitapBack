@@ -1,9 +1,18 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const fileSchema = new Schema({
-    link: {type: String, required: true},
-    name: {type: String, required: true}
-})
+// TODO: можливо необхідно добавити поле статус (реєстрований користувач, не реєстрований користувач)
+const File = sequelize.define('File', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
+    name: {type: Sequelize.STRING},
+    link: {type: Sequelize.STRING},
+});
 
-module.exports = mongoose.model('File', fileSchema);
+File.sync();
+
+module.exports = File;

@@ -1,15 +1,18 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const Advertising = sequelize.define('Advertising', {
+const Foto = sequelize.define('Foto', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
-    link: {type: Sequelize.STRING},
-    isOnline: {type: Sequelize.BOOLEAN}
+    imgSrc: {type: Sequelize.STRING},
+    imgAlt: {type: Sequelize.STRING},
+    name: {type: Sequelize.STRING},
 });
 
-module.exports = Advertising;
+Foto.sync();
+
+module.exports = Foto;

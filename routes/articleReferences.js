@@ -1,11 +1,11 @@
 const express = require('express');
 const route = express.Router();
-const mainModel = require('../models/Category');
 const sequelize = require('sequelize');
 const { Op } = require("sequelize");
-const utils = require('../models/utils');
 
-// ==========================
+const mainModel = require('../models/submodels/ArticleReference');
+
+// ======================================================================
 route.post('/table/length', function (req, res, next) {
     const options = {
         where: {}
@@ -101,24 +101,18 @@ route.put('/form', function (req, res, next) {
 });
 
 route.delete('/form', function (req, res, next) {
-    res.json({
-        resultBack: `Видалення не підтримується - функціоналу немає`,
-    })
+    mainModel.destroy({
+        where: {
+            id: req.body.id
+        }
+    }).then(data => {
+        res.json({
+            resultBack: `ID: ${req.body.id}) - Видалені дані`,
+        })
+    }).catch(err => {
+        console.log(`Error for while making delete for advertising=>put=>/form. Error log: ${err}`);
+    });
 });
 // =======================================
-
-route.get('/', function(req, res, next) {
-	mainModel
-		.findAll({
-            order: [
-                ['sortPositionHeader', 'ASC']
-            ]
-        })
-		.then(data => {
-			res.json(data);
-			next();
-		})
-		.catch(err => console.log(err))
-})
 
 module.exports = route;

@@ -1,9 +1,10 @@
 const express = require('express');
+
 const route = express.Router();
-const mainModel = require('../models/Category');
+
+const mainModel = require('../models/AdvertisingPlace');
 const sequelize = require('sequelize');
 const { Op } = require("sequelize");
-const utils = require('../models/utils');
 
 // ==========================
 route.post('/table/length', function (req, res, next) {
@@ -52,8 +53,7 @@ route.get('/form', function (req, res, next) {
     mainModel.findAll()
         .then(data => {
             res.json(data || []);
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(`Error for while making findAll for advertising=>get=>/form. Error log: ${err}`);
         })
 });
@@ -62,8 +62,7 @@ route.get('/form/:ID', function (req, res, next) {
     mainModel.findByPk(req.params.ID)
         .then(data => {
             res.json(data || []);
-        })
-        .catch(err => {
+        }).catch(err => {
             console.log(`Error for while making findByPK for advertising=>get=>/form/:ID. Error log: ${err}`);
         });
 });
@@ -107,18 +106,26 @@ route.delete('/form', function (req, res, next) {
 });
 // =======================================
 
-route.get('/', function(req, res, next) {
-	mainModel
-		.findAll({
-            order: [
-                ['sortPositionHeader', 'ASC']
-            ]
-        })
-		.then(data => {
-			res.json(data);
-			next();
-		})
-		.catch(err => console.log(err))
-})
+route.get('/:type', function(req, res, next) {
+    const type = req.params.type;
+
+    if (type) {
+        mainModel.findAll({
+            where: {
+                type: type
+            }
+        }).then(result => {
+            const data = result.length ? JSON.parse(result[0].jsonConfig) : {};
+
+            res.json(data);
+        }).catch(err => {
+            res.json({});
+        });
+    } else {
+        res.json({});
+    }
+
+    return;
+});
 
 module.exports = route;

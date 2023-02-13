@@ -1,11 +1,17 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Sequelize = require('sequelize');
+const sequelize = require('../util/database');
 
-const organizationSchema = new Schema({
-    url: {type: String, required: true},
-    imgID: {type: Schema.Types.ObjectId, ref: 'Foto'},
-    isOnline: {type: Boolean, required: true},
-    date: {type: Date, required: true}
-})
+const Organization = sequelize.define('Organization', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true,
+    },
+    name: {type: Sequelize.STRING},
+    url: {type: Sequelize.STRING},
+    isOnline: {type: Sequelize.BOOLEAN},
+    date: {type: Sequelize.DATE, defaultValue: Sequelize.NOW}
+});
 
-module.exports = mongoose.model('Organization', organizationSchema);
+module.exports = Organization;
