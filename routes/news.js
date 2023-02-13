@@ -34,6 +34,7 @@ route.post('/table', function (req, res, next) {
     const options = {
         offset: req.body.offset ? req.body.offset : 0,
         limit: req.body.limit ? req.body.limit : 30,
+        order: [['date', 'DESC']],
         where: {}
     };
 
@@ -179,7 +180,7 @@ route.get('/preview/:ignoreNewsID', function(req, res, next) {
                 [sequelize.Op.ne]: ignoreNewsID
             }
         },
-        order: [['date', 'ASC']],
+        order: [['date', 'DESC']],
         // include: [{
         //     model: FotoModel,
         //     as: 'fotos',
