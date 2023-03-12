@@ -180,11 +180,15 @@ route.get('/length', function(req, res, next) {
 });
 
 route.get('/length/:categoryID', function(req, res, next) {
-    const categoryFilter = req.params.categoryID ? {categoryID: req.params.categoryID} : {};
+    if (!req.params.categoryID) {
+        return res.json({
+            videosLength: 0
+        });
+    }
 
     mainModel.count({
         where: {
-            categoryID: categoryFilter,
+            categoryID: req.params.categoryID,
             isOnline: true
         }
     }).then(count => {
