@@ -192,7 +192,8 @@ route.put('/form', function (req, res, next) {
                     model: CategoryModel,
                     attributes: ['id']
                 }
-            ]
+            ],
+            order: [[AuthorModel, ArticleAuthor, 'sortPosition', 'ASC']]
         }).then(article => {
             const ArticleJSONObj = article.get();
             if (ArticleJSONObj.Authors.length) {
@@ -202,7 +203,8 @@ route.put('/form', function (req, res, next) {
             }
 
             if (ArticleJSONObj.Categories.length) {
-                ArticleJSONObj.categoryIDs = ArticleJSONObj.Categories.map(author => author.id);
+                ArticleJSONObj.categoryIDs = ArticleJSONObj.Categories.map(category => category.id);
+
                 delete ArticleJSONObj.Categories;
             }
 
@@ -227,6 +229,7 @@ route.put('/form', function (req, res, next) {
                 }
             }).then((length) => {
                 const authors = 'meta_authors' in body && body.meta_authors && body.meta_authors.split(',').filter(author => author && author !== 'undefined');
+
                 if (authors && authors.length) {
                     authors.forEach((author, index) => {
                         data.addAuthor(author, {
@@ -235,8 +238,9 @@ route.put('/form', function (req, res, next) {
                             }
                         }).catch(e => {
                             console.log('put -> article addAuthor -> Error: ' + e)
-                        })
+                        });
                     });
+
                     return;
                 }
             }).then(() => {
